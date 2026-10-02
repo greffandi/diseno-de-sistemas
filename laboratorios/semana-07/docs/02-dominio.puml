@@ -1,0 +1,85 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class GameConfig <<Singleton>> {
+  - {static} _instancia
+  + dificultad : str
+  + numero_maximo_turnos : int
+  + __new__() : GameConfig
+}
+
+class GameFacade <<Facade>> {
+  - _config : GameConfig
+  - _fabrica : MundoFactory
+  - _jugador : Personaje
+  - _enemigo : Personaje
+  + iniciar()
+  - _crear_mundo()
+  - _crear_personajes()
+  - _ejecutar_turnos()
+  - _elegir_estrategia()
+  - _turno_jugador()
+  - _turno_enemigo()
+  - _determinar_ganador() : Personaje
+}
+
+class PersonajeFactory <<Factory>> {
+  + {static} crear(tipo : str) : Personaje
+}
+
+abstract class MundoFactory <<Abstract Factory>> {
+  + nombre : str
+  + {abstract} crear_jugador() : Personaje
+  + {abstract} crear_enemigo() : Personaje
+}
+class FantasyFactory {
+  + crear_jugador() : Personaje
+  + crear_enemigo() : Personaje
+}
+class SciFiFactory {
+  + crear_jugador() : Personaje
+  + crear_enemigo() : Personaje
+}
+
+class Personaje {
+  + nombre : str
+  + vida : int
+  + ataque : int
+  + estrategia : EstrategiaAtaque
+  + set_estrategia(estrategia)
+  + atacar(objetivo) : int
+  + recibir_dano(dano)
+  + esta_vivo() : bool
+}
+class Guerrero
+class Dragon
+class Soldado
+class Alien
+
+interface EstrategiaAtaque <<Strategy>> {
+  + nombre : str
+  + ejecutar(atacante, objetivo) : int
+}
+class AtaqueNormal {
+  + ejecutar(atacante, objetivo) : int
+}
+class AtaqueFuerte {
+  + ejecutar(atacante, objetivo) : int
+}
+
+GameFacade --> GameConfig : usa
+GameFacade --> MundoFactory : usa
+GameFacade --> "2" Personaje : jugador y enemigo
+MundoFactory <|-- FantasyFactory
+MundoFactory <|-- SciFiFactory
+FantasyFactory ..> PersonajeFactory : usa
+SciFiFactory ..> PersonajeFactory : usa
+PersonajeFactory ..> Personaje : crea
+Personaje <|-- Guerrero
+Personaje <|-- Dragon
+Personaje <|-- Soldado
+Personaje <|-- Alien
+Personaje o--> "1" EstrategiaAtaque
+EstrategiaAtaque <|.. AtaqueNormal
+EstrategiaAtaque <|.. AtaqueFuerte
+@enduml

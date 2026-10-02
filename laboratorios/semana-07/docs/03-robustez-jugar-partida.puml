@@ -1,0 +1,23 @@
+@startuml
+left to right direction
+hide members
+
+class Jugador <<(A,#FFFFFF) actor>>
+class Consola <<(B,#ADD8E6) boundary>>
+class GameFacade <<(C,#90EE90) control>>
+class MundoFactory <<(C,#90EE90) control>>
+class EstrategiaAtaque <<(C,#90EE90) control>>
+class GameConfig <<(E,#FFD580) entity>>
+class Personaje <<(E,#FFD580) entity>>
+
+Jugador -- Consola : 1. selecciona mundo\n4. elige o mantiene estrategia
+Consola -- GameFacade : iniciar()\n_leer()
+GameFacade -- GameConfig : turnos máximos\ndificultad
+GameFacade -- MundoFactory : 2. crear_jugador()\ncrear_enemigo()
+MundoFactory -- Personaje : crea
+GameFacade -- Personaje : 5. atacar()\n6. respuesta del enemigo\n7. esta_vivo()
+Personaje -- EstrategiaAtaque : ejecutar()
+GameFacade -- Consola : 9. resultado final
+@enduml
+
+edumml 

@@ -1,0 +1,50 @@
+@startuml
+actor Jugador
+participant "GameFacade" as F
+participant "jugador : Personaje" as J
+participant "estrategiaJugador : EstrategiaAtaque" as SJ
+participant "enemigo : Personaje" as E
+participant "estrategiaEnemigo : EstrategiaAtaque" as SE
+
+== Turno N ==
+F -> Jugador : muestra opciones de estrategia
+Jugador --> F : elige 1, 2 o Enter (mantener)
+opt el jugador cambia de estrategia
+  F -> J : set_estrategia(nueva)
+end
+
+F -> J : atacar(enemigo)
+J -> SJ : ejecutar(jugador, enemigo)
+SJ -> E : recibir_dano(dano)
+SJ --> J : dano
+J --> F : dano
+
+F -> E : esta_vivo()
+E --> F : resultado
+
+alt enemigo derrotado (vida = 0)
+  F -> F : _determinar_ganador()
+  note right : gana el jugador
+else enemigo sigue vivo
+  F -> E : atacar(jugador)
+  E -> SE : ejecutar(enemigo, jugador)
+  SE -> J : recibir_dano(dano)
+  SE --> E : dano
+  E --> F : dano
+
+  F -> J : esta_vivo()
+  J --> F : resultado
+
+  alt jugador derrotado (vida = 0)
+    F -> F : _determinar_ganador()
+    note right : gana el enemigo
+  else jugador sigue vivo
+    F -> F : siguiente turno
+    note right
+      Si se alcanzó numero_maximo_turnos:
+      _determinar_ganador() compara vidas
+      (más vida gana; igual = empate)
+    end note
+  end
+end
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+actor Jugador
+
+rectangle "Videojuego por turnos" {
+  usecase "Jugar partida" as UC1
+  usecase "Seleccionar mundo" as UC2
+  usecase "Seleccionar estrategia de ataque" as UC3
+  usecase "Atacar al enemigo" as UC4
+  usecase "Ver resultado" as UC6
+  usecase "Cambiar estrategia durante el combate" as UC5
+}
+
+Jugador --> UC1
+UC1 .> UC2 : <<include>>
+UC1 .> UC3 : <<include>>
+UC1 .> UC4 : <<include>>
+UC1 .> UC6 : <<include>>
+UC5 .> UC1 : <<extend>>
+@enduml
